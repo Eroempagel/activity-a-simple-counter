@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Activity: A Simple Counter</title>
+    <style>
+      body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      button {
+        margin: 0.5rem;
+      }
+      .special {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- element where application will be rendered -->
+    <div id="root"></div>
+
+    <script
+      crossorigin
+      src="https://unpkg.com/react@16/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <script type="text/babel">
+      class Counter extends React.Component {
+        /*
+        Adding a constructor so we can set our initial state
+        */
+        constructor(props) {
+          //let the parent class do its thing with props
+          super(props);
+          //setup the initial value for count in state
+          this.state = {
+            // Allow the initial count to be set from a prop.
+            // If an initial count is not passed in, the count should start at 0.
+            count: props.initialCount || 0,
+          };
+        }
+        // new increment handler to update state
+        // setting count to be 1 greater than it's previous value
+        handleIncrement = (event) => {
+          // Prevent the counter from going above 20.
+          if (this.state.count < 20) {
+            //use a callback function when updating state with from a value already in state
+            //https://reactjs.org/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous
+            this.setState((state, props) => ({
+              count: state.count + 1,
+            }));
+          }
+        };
+        // new decrement handler to update state
+        // setting count to be 1 less than it's previous value
+        handleDecrement = (event) => {
+          // Prevent the counter from going below 0.
+          if (this.state.count > 0) {
+            //use a callback function when updating state with from a value already in state
+            //https://reactjs.org/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous
+            this.setState((state, props) => ({
+              count: state.count - 1,
+            }));
+          }
+        };
+
+        resetCount = (event) => {
+          // No need for a callback since we are meerly reinitiallizing the count back to original state
+          this.setState({
+            // Allow the initial count to be set from a prop.
+            // If an initial count is not passed in, the count should start at 0.
+            count: this.props.initialCount || 0,
+          });
+        };
+
+        render() {
+          // Turn the counter red when it's 10 or higher.
+          // Change it back to the original color if it goes below 10.
+          let countClassName = "";
+          if (this.state.count >= 10) {
+            countClassName = "special";
+          }
+
+          // Allow the initial count to be set from a prop.
+          // If an initial count is not passed in, the count should start at 0.
+          let initialCount = this.props.initialCount || 0;
+          // Add a button to reset the counter.
+          let resetButton = "";
+          // Only show this button if the counter has been modified from its original state.
+          if (this.state.count !== initialCount) {
+            resetButton = <button onClick={this.resetCount}>reset</button>;
+          }
+
+          return (
+            <div>
+              {/* button with onClick that calls the handleDecrement method on this class */}
+              <button onClick={this.handleDecrement}>decrement (-)</button>
+              <span className={countClassName}>{this.state.count}</span>
+              {/* button with onClick that calls the handleIncrement method on this class */}
+              <button onClick={this.handleIncrement}>increment (+)</button>
+              <div>{resetButton}</div>
+            </div>
+          );
+        }
+      }
+
+      ReactDOM.render(
+        // Allow the initial count to be set from a prop.
+        <Counter initialCount={2} />,
+        document.getElementById("root")
+      );
+    </script>
+  </body>
+</html>
